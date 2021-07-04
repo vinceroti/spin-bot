@@ -1,12 +1,13 @@
 module.exports = {
   root: true,
-  parserOptions: {
-    ecmaVersion: 2017,
-  },
   env: {
+    node: true,
+    browser: true,
     es6: true,
   },
-  extends: ["prettier", "plugin:prettier/recommended"],
+  extends: ["eslint:recommended", "prettier", "plugin:prettier/recommended"],
+  parser: "babel-eslint",
+  // required to lint *.vue files
   plugins: ["prettier"],
   // add your custom rules here
   rules: {
@@ -22,4 +23,5 @@ module.exports = {
       },
     ],
   },
+  ignorePatterns: ["**/bin/*.**"],
 };

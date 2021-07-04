@@ -7,22 +7,19 @@
   ],
   "scripts": {
     "transpile": "babel --presets es2015 src --out-dir bin",
-    "start": "npm run transpile && claudia create --name discord-wheel-bot --region us-west-1 --api-module bin/src",
-    "test": "npm run transpile && claudia test-lambda",
-    "deploy": "npm run transpile && claudia update"
+    "start": "npm run transpile && node bin/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "claudia-bot-builder": "^4.5.0",
-    "huh": "^2.0.1"
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "claudia": "^5.13.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
+    "babel-preset-es2015": "^6.24.1",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-import": "^2.22.1",
