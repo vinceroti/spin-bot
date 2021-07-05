@@ -33,6 +33,9 @@ npm run dev
 ```
 
 ## Production Mode (transpiled)
+
+Host this locally or on any one of your favorite hosting platforms (Heroku, EC2, etc)
+
 ```
 npm run start
 ```
