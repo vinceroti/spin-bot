@@ -4,7 +4,7 @@ Want a discord bot that helps you pick a game? Look no further!
 
 ## Install
 
-Make sure you have the latest version of node/npm
+Make sure you have the latest version of node/npm before continuing
 
 ```
 npm install
@@ -21,7 +21,7 @@ brew install redis-server
 ## Create your bot!
 You can follow these steps up until "How to Code a Basic Discord Bot" - https://www.freecodecamp.org/news/create-a-discord-bot-with-python/
 
-Make sure to grab the token you made from that guide and create a .env file with the following content. Replace your token over the "123"
+Make sure to grab the token you made from the guide and create a .env file with the following content. Replace your token over the "123"
 
 ```
 token=123
@@ -32,7 +32,7 @@ token=123
 npm run dev
 ```
 
-## Production Mode (transpiled)
+## Production Mode (babel/minify)
 
 Host this locally or on any one of your favorite hosting platforms (Heroku, EC2, etc)
 
