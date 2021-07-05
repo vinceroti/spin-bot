@@ -6,4 +6,14 @@ async function sleep(fn, ms) {
   return fn();
 }
 
-export { sleep };
+async function getList(redisClient, id) {
+  try {
+    const res = await redisClient.lrange(id, 0, -1);
+    return !res || !res.length ? null : res;
+  } catch (e) {
+    console.error(e);
+    return `${e} - Failed to get GameList`;
+  }
+}
+
+export { sleep, getList };

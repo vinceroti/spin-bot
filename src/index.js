@@ -1,6 +1,6 @@
 require("dotenv").config();
 import Discord from "discord.js";
-import { sleep } from "./helpers";
+import { sleep, getList } from "./helpers";
 import redis from "async-redis";
 const redisClient = redis.createClient();
 const discordClient = new Discord.Client();
@@ -13,7 +13,7 @@ discordClient.on("error", function (error) {
   console.error(error);
 });
 
-discordClient.on("ready", () => {
+discordClient.on("ready", async () => {
   console.log(`Logged in...`);
 });
 
@@ -35,7 +35,7 @@ discordClient.on("message", async (message) => {
 
   if (!args.length) {
     // after successfully create the play space, response to the user that call this command.
-    const gameList = await redisClient.get(serverId);
+    const gameList = await getList(redisClient, serverId);
     if (!gameList)
       return message.channel.send(
         "No games exist, add them with - '!spin -add Game Title'"
@@ -45,33 +45,64 @@ discordClient.on("message", async (message) => {
       await message.channel.send("What could it be...");
     }, 2000);
     await sleep(async () => {
-      await message.channel.send("You Got Test Game!");
+      await message.channel.send(
+        `You Got ${gameList[Math.floor(Math.random() * gameList.length)]}`
+      );
     }, 2000);
     return;
   }
 
   if (args.length && args.includes("-list")) {
-    const gameList = await redisClient.get(serverId);
+    const gameList = await getList(redisClient, serverId);
     if (!gameList) return message.channel.send("No games found");
     return message.channel.send(`Listing Games - ${gameList}`);
   }
 
-  if (command === "spin" && args.length && args.includes("-add")) {
+  if (args.length && args.includes("-add")) {
     const game = commandBody.split("-add ")[1];
     if (!game || !game.length) return;
-    let arr = [];
-    const gameList = await redisClient.get(serverId);
-    if (gameList) arr = gameList;
 
     try {
-      arr.push(game);
-      await redisClient.set(serverId, arr);
+      await redisClient.rpush(serverId, game);
       message.channel.send(`${game} added!`);
-    } catch (err) {
-      await message.channel.send(`Error - ${err}`);
-      console.error(err);
+    } catch (e) {
+      console.error(e);
+      await message.channel.send(`Error - ${e}`);
     }
+    return;
   }
+
+  if (args.length && args.includes("-deleteAll")) {
+    const gameList = await getList(redisClient, serverId);
+    if (!gameList) return message.channel.send("No games exist");
+
+    try {
+      gameList.forEach(async (elm) => {
+        await redisClient.lrem(serverId, 0, elm);
+      });
+      message.channel.send("Entries Successfully Deleted");
+    } catch (e) {
+      console.error(e);
+      await message.channel.send(`Error - ${e}`);
+    }
+    return;
+  }
+
+  if (args.length && args.includes("-delete")) {
+    const game = commandBody.split("-delete ")[1];
+    if (!game || !game.length) return;
+    try {
+      const res = await redisClient.lrem(serverId, 0, game);
+      message.channel.send(
+        !res ? `No Entry Found` : `'${game}' Successfully Deleted`
+      );
+    } catch (e) {
+      console.error(e);
+      await message.channel.send(`Error - ${e}`);
+    }
+    return;
+  }
+  await message.channel.send(`Invalid spin command`);
 });
 
 discordClient.login(process.env.token);
