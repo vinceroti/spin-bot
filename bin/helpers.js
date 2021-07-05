@@ -1,16 +1,1 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-function timeout(ms) {
-  return new Promise(function (resolve) {
-    return setTimeout(resolve, ms);
-  });
-}
-async function sleep(fn, ms) {
-  await timeout(ms);
-  return fn();
-}
-
-exports.sleep = sleep;
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.sleep=sleep;function asyncGeneratorStep(a,b,c,d,e,f,g){try{var h=a[f](g),i=h.value}catch(a){return void c(a)}h.done?b(i):Promise.resolve(i).then(d,e)}function _asyncToGenerator(a){return function(){var b=this,c=arguments;return new Promise(function(d,e){function f(a){asyncGeneratorStep(h,d,e,f,g,"next",a)}function g(a){asyncGeneratorStep(h,d,e,f,g,"throw",a)}var h=a.apply(b,c);f(void 0)})}}function timeout(a){return new Promise(function(b){return setTimeout(b,a)})}function sleep(){return _sleep.apply(this,arguments)}function _sleep(){return _sleep=_asyncToGenerator(/*#__PURE__*/regeneratorRuntime.mark(function a(b,c){return regeneratorRuntime.wrap(function(a){for(;;)switch(a.prev=a.next){case 0:return a.next=2,timeout(c);case 2:return a.abrupt("return",b());case 3:case"end":return a.stop();}},a)})),_sleep.apply(this,arguments)}
