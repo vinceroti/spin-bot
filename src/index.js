@@ -33,8 +33,8 @@ discordClient.on("message", async (message) => {
 
   if (command !== "spin") return;
 
+  // select a random game
   if (!args.length) {
-    // after successfully create the play space, response to the user that call this command.
     const gameList = await getList(redisClient, serverId);
     if (!gameList)
       return message.channel.send(
@@ -52,12 +52,14 @@ discordClient.on("message", async (message) => {
     return;
   }
 
+  // list all games added
   if (args.length && args.includes("-list")) {
     const gameList = await getList(redisClient, serverId);
     if (!gameList) return message.channel.send("No games found");
     return message.channel.send(`Listing Games - ${gameList}`);
   }
 
+  // add an entry
   if (args.length && args.includes("-add")) {
     const game = commandBody.split("-add ")[1];
     if (!game || !game.length) return;
@@ -72,6 +74,7 @@ discordClient.on("message", async (message) => {
     return;
   }
 
+  // delete all entries
   if (args.length && args.includes("-deleteAll")) {
     const gameList = await getList(redisClient, serverId);
     if (!gameList) return message.channel.send("No games exist");
@@ -88,6 +91,7 @@ discordClient.on("message", async (message) => {
     return;
   }
 
+  // delete an entry
   if (args.length && args.includes("-delete")) {
     const game = commandBody.split("-delete ")[1];
     if (!game || !game.length) return;
@@ -102,6 +106,8 @@ discordClient.on("message", async (message) => {
     }
     return;
   }
+
+  // no commands found
   await message.channel.send(`Invalid spin command`);
 });
 
