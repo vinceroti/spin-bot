@@ -63,7 +63,7 @@ discordClient.on("message", async (message) => {
   if (args.length && args.includes("-list")) {
     const gameList = await getList(redisClient, serverId);
     if (!gameList) return message.channel.send("No games found");
-    return message.channel.send(`Listing Games - ${gameList}`);
+    return message.channel.send(`Listing Games - ${gameList.join(", ")}`);
   }
 
   // add an entry
