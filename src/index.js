@@ -1,9 +1,9 @@
 require("dotenv").config();
-import Discord from "discord.js";
+import { Client, MessageEmbed } from "discord.js";
 import { sleep, getList } from "./helpers";
 import redis from "async-redis";
 const redisClient = redis.createClient();
-const discordClient = new Discord.Client();
+const discordClient = new Client();
 
 redisClient.on("error", function (error) {
   console.error(error);
@@ -15,6 +15,13 @@ discordClient.on("error", function (error) {
 
 discordClient.on("ready", async () => {
   console.log(`Logged in...`);
+  discordClient.user.setPresence({
+    status: "online",
+    activity: {
+      type: "LISTENING",
+      name: "!spin",
+    },
+  });
 });
 
 const prefix = "!";
@@ -107,8 +114,38 @@ discordClient.on("message", async (message) => {
     return;
   }
 
+  // list all commands
+  if (args.length && args.includes("-help")) {
+    const embed = new MessageEmbed()
+      .setTitle("Spin Commands")
+      .setColor(0xff0000)
+      .addFields(
+        {
+          name: "!spin",
+          value: "Spin the wheel!",
+        },
+        {
+          name: "!spin -list",
+          value: "List all games added to the wheel",
+        },
+        {
+          name: "!spin -add Game",
+          value: "Add a game to the wheel ex: '!spin -add Halo'",
+        },
+        {
+          name: "!spin -delete Game",
+          value: "Delete a game from the wheel ex: '!spin -delete Halo'",
+        },
+        {
+          name: "!spin -deleteAll",
+          value: "Delete all games from the wheel",
+        }
+      );
+    return message.channel.send(embed);
+  }
+
   // no commands found
-  await message.channel.send(`Invalid spin command`);
+  await message.channel.send(`Invalid spin command - Try '!spin -help'`);
 });
 
 discordClient.login(process.env.token);
